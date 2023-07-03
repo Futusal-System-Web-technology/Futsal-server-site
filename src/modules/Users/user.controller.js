@@ -1,6 +1,8 @@
 const { ObjectId } = require('mongodb')
 const { getDb } = require('../../../utilis/dbConfig')
 const bcrypt = require('bcrypt')
+const { generateToken } = require('../../../utilis/token')
+
 
 module.exports.postUser = async (req, res, next) => {
   try {
@@ -26,15 +28,68 @@ module.exports.postUser = async (req, res, next) => {
       }
       const result = await db.collection('Users').insertOne(newUser)
       res.status(200).json({
-        status: true,
+        status: 'success',
         message: 'data saved successfully',
         data: result
       })
     }, 1000)
   } catch (error) {
     res.status(400).json({
-      status: false,
+      status: 'Fail',
       message: error.message
     })
   }
+}
+
+
+module.exports.loginUser = async(req,res,next)=>{
+    try {
+        const{username,password} = req.body;
+
+        if(!username||!password){
+            return res.status(401).json({
+                status:"Fail",
+                message:"Please provide credentials"
+            })
+        }
+        const db = getDb()
+        const user = await db.collection('Users').findOne({userName:username});
+        if(!user){
+            return res.status(401).json({
+                status:"Fail",
+                message:"No user with this username"
+            })
+        }
+
+        const isPasswordValid = bcrypt.compareSync(password,user.password);
+
+        if(!isPasswordValid){
+            return res.status(403).json({
+                status:"Fail",
+                message:"Password is not correct"
+            })
+        }
+
+        if(user.status == 0){
+            return res.status(403).json({
+                status:"Fail",
+                message:"Your account is not active"
+            })
+        }
+        const token = generateToken(user);
+        const {password:pwd,...others} = user
+        res.status(200).json({
+            status:"success",
+            message:"successfully singed in",
+            data:{
+                others,
+                token
+            }
+        })
+    } catch (error) {
+        res.status(404).json({
+            status:"Fail",
+            message:error.message,
+        }) 
+    }
 }
