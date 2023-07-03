@@ -15,6 +15,12 @@ connectToServer((err)=>{
     })  
     // console.log(err);
 })
+
+const userRouter = require('./src/modules/Users/user.router')
+
+
+app.use('/api/v1/users/',userRouter)
+
 app.get("/", (req, res) => {
     res.send("Hello World");
 });
