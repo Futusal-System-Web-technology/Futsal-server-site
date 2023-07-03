@@ -11,13 +11,8 @@ module.exports.getAllUsers = async (req,res,next)=>{
         if (users.length == 0) {
             return res.status(400).json({ success: 'Fail', error: "No data" });
         }
-        const newUsersData = [];
-        users.forEach(user => {
-            const{password,...other} = user
-            newUsersData.push(other)
-        });
 
-        res.status(200).json({ success: 'success', data: newUsersData });
+        res.status(200).json({ success: 'success', data: users });
     } catch (error) {
         res.status(400).json({
             status: 'Fail',
@@ -28,7 +23,7 @@ module.exports.getAllUsers = async (req,res,next)=>{
 
 module.exports.postUser = async (req, res, next) => {
   try {
-    const { username, password, role } = req.body
+    const { email,username, password } = req.body
     let newPassword
     const db = getDb()
 
@@ -44,8 +39,9 @@ module.exports.postUser = async (req, res, next) => {
 
     setTimeout(async () => {
       const newUser = {
+        email:email,
         userName: username,
-        role: role,
+        role: 'user',
         password: newPassword
       }
       const result = await db.collection('Users').insertOne(newUser)
