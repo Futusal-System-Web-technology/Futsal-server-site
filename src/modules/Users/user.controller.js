@@ -10,8 +10,14 @@ module.exports.getAllUsers = async (req,res,next)=>{
 
         if (users.length == 0) {
             return res.status(400).json({ success: 'Fail', error: "No data" });
-          }
-          res.status(200).json({ success: 'success', data: users });
+        }
+        const newUsersData = [];
+        users.forEach(user => {
+            const{password,...other} = user
+            newUsersData.push(other)
+        });
+
+        res.status(200).json({ success: 'success', data: newUsersData });
     } catch (error) {
         res.status(400).json({
             status: 'Fail',
