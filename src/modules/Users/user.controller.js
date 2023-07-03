@@ -3,6 +3,22 @@ const { getDb } = require('../../../utilis/dbConfig')
 const bcrypt = require('bcrypt')
 const { generateToken } = require('../../../utilis/token')
 
+module.exports.getAllUsers = async (req,res,next)=>{
+    try {
+        const db = getDb();
+        const users = await db.collection("Users").find().toArray();
+
+        if (users.length == 0) {
+            return res.status(400).json({ success: 'Fail', error: "No data" });
+          }
+          res.status(200).json({ success: 'success', data: users });
+    } catch (error) {
+        res.status(400).json({
+            status: 'Fail',
+            message: error.message,
+          });
+    }
+}
 
 module.exports.postUser = async (req, res, next) => {
   try {
