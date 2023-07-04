@@ -21,6 +21,25 @@ module.exports.getAllUsers = async (req,res,next)=>{
     }
 }
 
+module.exports.getMyBooking = async(req,res,next)=>{
+    try {
+        const db = getDb();
+        const {username} = req.body;
+        const bookings = await db.collection('futsal-bookings').find({username:username}).sort({"_id": -1}).toArray()
+
+        res.status(200).send({
+            status: 'success',
+            data:bookings
+        });
+    } catch (error) {
+        res.status(400).json({
+            status:"Fail",
+            message: error.message
+        })
+    }
+}
+
+
 module.exports.postUser = async (req, res, next) => {
   try {
     const { email,username, password } = req.body
