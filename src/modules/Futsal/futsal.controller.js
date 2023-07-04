@@ -18,3 +18,17 @@ module.exports.postFutsal = async(req,res,next) => {
         })
     }
 }
+
+module.exports.getAllFutsal = async(req,res,next)=>{
+    try {
+        const db = getDb();
+        const results  = await db.collection('futsal').find().toArray();
+
+        if (results.length == 0) {
+            return res.status(400).json({ success: 'Fail', error: "No data" });
+        }
+        res.status(200).json({status:'success',data: results});
+    } catch (error) {
+        
+    }
+}
