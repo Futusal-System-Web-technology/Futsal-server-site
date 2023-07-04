@@ -17,9 +17,10 @@ connectToServer((err)=>{
 })
 
 const userRouter = require('./src/modules/Users/user.router')
-
+const futsalRouter = require('./src/modules/Futsal/futsal.router');
 
 app.use('/api/v1/users/',userRouter)
+app.use('/api/v1/futsals',futsalRouter)
 
 app.get("/", (req, res) => {
     res.send("Hello World");
