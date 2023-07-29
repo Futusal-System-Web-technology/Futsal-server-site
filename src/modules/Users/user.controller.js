@@ -43,6 +43,22 @@ module.exports.getMyBooking = async (req, res, next) => {
   }
 }
 
+module.exports.getAllBooking = async (req, res, next) => {
+  try {
+    const db = getDb()
+    const bookings = await db.collection('futsal-bookings').find({}).toArray()
+    res.status(200).send({
+      status: 'success',
+      data: bookings
+    })
+  } catch (error) {
+    res.status(400).json({
+      status: 'Fail',
+      message: error.message
+    })
+  }
+}
+
 module.exports.updateBooking = async (req, res, next) => {
   try {
     const db = getDb()
