@@ -43,6 +43,32 @@ module.exports.getMyBooking = async (req, res, next) => {
   }
 }
 
+module.exports.deleteBooking = async (req, res, next) => {
+  try {
+    const db = getDb()
+    const { id } = req.body
+    const result = await db
+      .collection('futsal-bookings')
+      .deleteOne({ _id: ObjectId(id) })
+    if (result.deletedCount === 1) {
+      res.status(200).send({
+        status: 'success',
+        message: 'deleted successfully'
+      })
+    } else {
+      res.status(400).send({
+        status: 'success',
+        message: 'deleted not successfully'
+      })
+    }
+  } catch (error) {
+    res.status(400).json({
+      status: 'Fail',
+      message: error.message
+    })
+  }
+}
+
 module.exports.getAllBooking = async (req, res, next) => {
   try {
     const db = getDb()

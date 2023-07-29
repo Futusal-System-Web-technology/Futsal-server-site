@@ -5,12 +5,14 @@ const {
   getAllUsers,
   getMyBooking,
   updateBooking,
-  getAllBooking
+  getAllBooking,
+  deleteBooking
 } = require('./user.controller')
 const router = express.Router()
 
 router.route('/').get(getAllUsers)
 router.route('/all-bookings').get(getAllBooking)
+router.route('/delete-booking').delete(deleteBooking)
 router.route('/my-booking').post(getMyBooking)
 router.route('/register').post(postUser)
 router.route('/login').post(loginUser)
